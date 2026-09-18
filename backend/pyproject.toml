@@ -1,0 +1,30 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Yion", email = "6831503029@lamduan.mfu.ac.th" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "authlib>=1.8.0",
+    "fastapi[standard]>=0.141.1",
+    "itsdangerous>=2.2.0",
+    "psycopg2-binary>=2.9.13",
+    "pydantic-settings>=2.15.0",
+    "python-dotenv>=1.2.3",
+    "python-jose[cryptography]>=3.5.0",
+    "requests>=2.34.2",
+    "sqlalchemy>=2.0.53",
+    "uvicorn>=0.53.0",
+]
+[tool.uv]
+package = false
+
+[project.scripts]
+backend = "backend:main"
+
+[build-system]
+requires = ["uv_build>=0.12.14,<0.13.0"]
+build-backend = "uv_build"

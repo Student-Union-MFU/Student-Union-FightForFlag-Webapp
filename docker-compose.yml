@@ -1,0 +1,26 @@
+# docker-compose.yml
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: yion
+      POSTGRES_PASSWORD: yion
+      POSTGRES_DB: voteapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: postgres://voteapp:yion@db:5432/voteapp
+    depends_on:
+      - db
+
+volumes:
+  db_data:
