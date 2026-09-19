@@ -3,7 +3,15 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { Building2, Ellipsis, GraduationCap, Hash, LoaderCircle, LogOut, Shell } from "lucide-react";
+import {
+    Building2,
+    Ellipsis,
+    GraduationCap,
+    Hash,
+    LoaderCircle,
+    LogOut,
+    Shell,
+} from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import LoginMenu from "./loginmenu";
@@ -20,29 +28,35 @@ export default function Navbar() {
     const [sidebarActive, setSidebarActive] = useState<boolean>(false);
     const [rendered, setRendered] = useState<boolean>(false);
     const [buttonload, setButtonload] = useState<boolean>(false);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const backdropRef = useRef<HTMLDivElement>(null);
 
-    const { user, loading, logout }= useAuth();
+    const { user, loading, logout } = useAuth();
 
     const handleSidebarOnClick = () => {
         if (!sidebarActive) setRendered(true);
         setSidebarActive(!sidebarActive);
     };
-    
+
     const handleLogout = () => {
         setButtonload(true);
+
         setTimeout(() => {
             logout();
             setButtonload(false);
         }, 1000);
-    }
+    };
 
     useGSAP(
         () => {
             if (!rendered) return;
 
-            const cards = gsap.utils.toArray<HTMLElement>(".card", containerRef.current);
+            const cards = gsap.utils.toArray<HTMLElement>(
+                ".card",
+                containerRef.current
+            );
+
             const rotations = [-3, 2, -1.5];
 
             const tl = gsap.timeline({
@@ -94,14 +108,19 @@ export default function Navbar() {
                 );
             }
         },
-        { scope: containerRef, dependencies: [sidebarActive, rendered] }
+        {
+            scope: containerRef,
+            dependencies: [sidebarActive, rendered],
+        }
     );
 
     return (
         <header
             className={clsx(
-                sidebarActive ? "text-zinc-50 transition-colors duration-200" : "text-zinc-900 duration-400",
-                "w-full px-4"
+                sidebarActive
+                    ? "text-zinc-50 transition-colors duration-200"
+                    : "text-zinc-900 duration-400",
+                "relative w-full px-4"
             )}
         >
             <nav
@@ -119,10 +138,11 @@ export default function Navbar() {
                     <div className="flex items-center justify-between gap-20">
                         {links.map((e, i) => (
                             <Link href={e.link} key={i}>
-                                <p className="">{e.text}</p>
+                                <p>{e.text}</p>
                             </Link>
                         ))}
                     </div>
+
                     {user ? <UserProfile /> : <LoginMenu />}
                 </div>
 
@@ -148,17 +168,33 @@ export default function Navbar() {
                         <div
                             ref={backdropRef}
                             style={{ opacity: 0 }}
-                            className="absolute inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full min-h-screen"
+                            className="
+                                fixed inset-0 z-20
+                                bg-zinc-950
+                                overflow-y-auto
+                                overscroll-contain
+                            "
                             onClick={handleSidebarOnClick}
                         >
                             <div
                                 ref={containerRef}
                                 onClick={(e) => e.stopPropagation()}
-                                className="w-full h-auto flex flex-col pt-30 items-center gap-3 p-8"
+                                className="
+                                    w-full min-h-screen
+                                    flex flex-col
+                                    pt-30
+                                    items-center
+                                    gap-3
+                                    p-8
+                                "
                             >
                                 <div className="card w-full flex flex-col rounded-xl overflow-hidden bg-zinc-50 divide-y divide-zinc-200 shadow-xl">
                                     {links.map((e, i) => (
-                                        <Link href={e.link} key={i} onClick={handleSidebarOnClick}>
+                                        <Link
+                                            href={e.link}
+                                            key={i}
+                                            onClick={handleSidebarOnClick}
+                                        >
                                             <p className="item px-6 py-4 text-3xl text-zinc-900">
                                                 {e.text}
                                             </p>
@@ -170,11 +206,18 @@ export default function Navbar() {
                                     <p className="text-xs uppercase tracking-wide text-zinc-400 mb-2">
                                         Made by
                                     </p>
-                                    <p className="text-3xl text-zinc-900">Student Union Developer Team</p>
+
+                                    <p className="text-3xl text-zinc-900">
+                                        Student Union Developer Team
+                                    </p>
+
                                     <p className="text-xs text-zinc-500">
                                         123 University Ave, Chiang Rai
                                     </p>
-                                    <p className="text-xs text-zinc-500">contact@studentunion.ac.th</p>
+
+                                    <p className="text-xs text-zinc-500">
+                                        contact@studentunion.ac.th
+                                    </p>
                                 </div>
 
                                 {loading ? (
@@ -184,25 +227,52 @@ export default function Navbar() {
                                 ) : user ? (
                                     <div className="flex flex-col gap-2 h-auto w-full pb-20">
                                         <div className="card flex flex-col w-full rounded-xl overflow-hidden bg-zinc-100 text-zinc-950 px-5 py-5">
-                                            <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase truncate">{user.name}</p>
-                                            <p className="text-4xl mt-1.5 truncate">{user.student_id}</p>
-                                            <p className="text-lg mt-1 truncate">{user.major}</p>
-                                            <p className="text-xs text-zinc-600 mt-0.5 leading-tight truncate">{user.school}</p>
+                                            <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase truncate">
+                                                {user.name}
+                                            </p>
+
+                                            <p className="text-4xl mt-1.5 truncate">
+                                                {user.student_id}
+                                            </p>
+
+                                            <p className="text-lg mt-1 truncate">
+                                                {user.major}
+                                            </p>
+
+                                            <p className="text-xs text-zinc-600 mt-0.5 leading-tight truncate">
+                                                {user.school}
+
+                                            </p>
                                         </div>
-                                        <button 
+
+                                        <button
                                             onClick={handleLogout}
-                                            className="card w-full px-4 py-4 flex items-center justify-center gap-2 text-lg font-medium bg-zinc-100 rounded-xl text-zinc-950 hover:text-red-400 transition-colors">
-                                            { buttonload? <LoaderCircle className="animate-spin" /> : <LogOut size={16} />}
+                                            className="
+                                                card w-full px-4 py-4
+                                                flex items-center justify-center
+                                                gap-2 text-lg font-medium
+                                                bg-zinc-100 rounded-xl
+                                                text-zinc-950
+                                                hover:text-red-400
+                                                transition-colors
+                                            "
+                                        >
+                                            {buttonload ? (
+                                                <LoaderCircle className="animate-spin" />
+                                            ) : (
+                                                <LogOut size={16} />
+                                            )}
+
                                             Log out
                                         </button>
                                     </div>
                                 ) : (
                                     <div className="card w-full rounded-xl overflow-hidden flex justify-end">
                                         <LoginMenu />
+
                                     </div>
                                 )}
                             </div>
-
                         </div>
                     )}
                 </div>
