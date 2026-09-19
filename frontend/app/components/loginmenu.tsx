@@ -2,9 +2,11 @@
 
 import clsx from "clsx";
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export default function LoginMenu() {
     const startGoogleLogin = () => {
-        window.location.href = "http://localhost:8000/auth/login";
+        window.location.href = `http://${backendUrl}/auth/login`;
     };
 
     const handleLoginOnClick = () => {
