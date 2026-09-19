@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     google_client_id: str
     google_client_secret: str
     jwt_secret: str
+    frontend_url: str
 
 def _require(key: str) -> str:
     value = os.getenv(key)
@@ -22,4 +23,5 @@ settings = Settings(
     google_client_id=_require("GOOGLE_CLIENT_ID"),
     google_client_secret=_require("GOOGLE_CLIENT_SECRET"),
     jwt_secret=_require("JWT_SECRET"),
+    frontend_url=_require("FRONTEND_URL")
 )

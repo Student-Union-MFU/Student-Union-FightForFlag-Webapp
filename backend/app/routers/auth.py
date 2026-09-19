@@ -7,6 +7,7 @@ from app.auth.jwt import create_access_token
 from app.db import get_db
 from models.user import User
 from app.helpers.emailstrip import parse_mfu_student_email
+from app.config import settings
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -43,7 +44,7 @@ async def auth_callback(request: Request, db: Session = Depends(get_db)):
 
     jwt_token = create_access_token({"sub": str(user.public_id)})
 
-    response = RedirectResponse(url="http://localhost:3000/")
+    response = RedirectResponse(url=settings.frontend_url)
     response.set_cookie(
         "access_token",
         jwt_token,
