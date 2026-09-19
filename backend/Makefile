@@ -5,6 +5,9 @@ DB_NAME := voteapp
 dev:
 	uv run uvicorn app.main:app --reload --port 8000
 
+network:
+	uv run uvicorn app.main:app --host 0.0.0.0 --port 8000
+
 db-shell:
 	docker exec -it $(CONTAINER) psql -U $(DB_USER) -d $(DB_NAME)
 	
