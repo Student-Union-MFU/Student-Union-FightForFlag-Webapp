@@ -101,7 +101,7 @@ export default function Navbar() {
         <header
             className={clsx(
                 sidebarActive ? "text-zinc-50 transition-colors duration-200" : "text-zinc-900 duration-400",
-                "w-full h-auto px-4"
+                "w-full min-h-screen px-4"
             )}
         >
             <nav
@@ -148,7 +148,7 @@ export default function Navbar() {
                         <div
                             ref={backdropRef}
                             style={{ opacity: 0 }}
-                            className="fixed inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full min-h-screen"
+                            className="absolute inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full min-h-screen"
                             onClick={handleSidebarOnClick}
                         >
                             <div
