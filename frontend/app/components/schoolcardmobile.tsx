@@ -13,7 +13,25 @@ interface SchoolCardProps {
 function getSchoolInitial(name: string): string {
     const trimmed = name.trim();
     const withoutPrefix = trimmed.replace(/^school of\s+/i, "");
+
     return (withoutPrefix || trimmed).charAt(0).toUpperCase();
+}
+
+function isLightColor(color: string): boolean {
+    const hex = color.replace("#", "");
+
+    if (hex.length !== 6) {
+        return false;
+    }
+
+    const r = parseInt(hex.slice(0, 2), 16);
+    const g = parseInt(hex.slice(2, 4), 16);
+    const b = parseInt(hex.slice(4, 6), 16);
+
+    const luminance =
+        (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+    return luminance > 0.7;
 }
 
 export function SchoolCardMobile({
@@ -26,8 +44,26 @@ export function SchoolCardMobile({
 }: SchoolCardProps) {
     const initial = getSchoolInitial(name);
     const majorCount = getMajorCount(schoolCode);
+
     const isOwnSchool = status === "own-school";
     const isVoted = status === "voted";
+    const isLight = isLightColor(color);
+
+    const decorativeColor = isLight
+        ? "rgba(0,0,0,0.12)"
+        : "rgba(255,255,255,0.20)";
+
+    const secondaryDecorativeColor = isLight
+        ? "rgba(0,0,0,0.08)"
+        : "rgba(255,255,255,0.10)";
+
+    const initialColor = isLight
+        ? "rgba(0,0,0,0.12)"
+        : "rgba(255,255,255,0.20)";
+
+    const separatorColor = isLight
+        ? "rgba(0,0,0,0.10)"
+        : "rgba(255,255,255,0.25)";
 
     return (
         <div
@@ -46,30 +82,56 @@ export function SchoolCardMobile({
                 }}
             >
                 <div
-                    className="absolute inset-0 opacity-30"
+                    className="absolute inset-0"
                     style={{
-                        background: `radial-gradient(circle at 85% 15%, white 0%, transparent 32%), radial-gradient(circle at 10% 100%, black 0%, transparent 45%)`,
+                        background: isLight
+                            ? "radial-gradient(circle at 85% 15%, rgba(255,255,255,0.35) 0%, transparent 32%), radial-gradient(circle at 10% 100%, rgba(0,0,0,0.08) 0%, transparent 45%)"
+                            : "radial-gradient(circle at 85% 15%, rgba(255,255,255,0.18) 0%, transparent 32%), radial-gradient(circle at 10% 100%, rgba(0,0,0,0.15) 0%, transparent 45%)",
                     }}
                 />
 
                 <div
-                    className="absolute -right-8 -top-10 size-32 rounded-full border-[18px] border-white/20"
+                    className="absolute -right-8 -top-10 size-32 rounded-full border-[18px]"
+                    style={{
+                        borderColor: decorativeColor,
+                    }}
                 />
 
                 <div
-                    className="absolute -bottom-14 -left-10 size-36 rounded-full border-[20px] border-white/10"
+                    className="absolute -bottom-14 -left-10 size-36 rounded-full border-[20px]"
+                    style={{
+                        borderColor: secondaryDecorativeColor,
+                    }}
                 />
 
                 <span
-                    className="pointer-events-none absolute -right-2 -top-7 select-none text-[125px] font-bold leading-none tracking-[-0.12em] text-white/20"
+                    className="pointer-events-none absolute -right-2 -top-7 select-none text-[125px] font-bold leading-none tracking-[-0.12em]"
+                    style={{
+                        color: initialColor,
+                    }}
                     aria-hidden="true"
                 >
                     {initial}
                 </span>
 
-                <div className="absolute inset-0 bg-gradient-to-b from-black/5 via-transparent to-black/10" />
+                <div
+                    className="absolute inset-0"
+                    style={{
+                        background: isLight
+                            ? "linear-gradient(to bottom, rgba(0,0,0,0.02), transparent 50%, rgba(0,0,0,0.06))"
+                            : "linear-gradient(to bottom, rgba(0,0,0,0.05), transparent 50%, rgba(0,0,0,0.12))",
+                    }}
+                />
 
-                <span className="absolute left-2.5 top-2.5 flex size-7 items-center justify-center rounded-full bg-white/95 text-[9px] font-semibold text-zinc-600 shadow-sm backdrop-blur">
+                <span
+                    className="absolute left-2.5 top-2.5 flex size-7 items-center justify-center rounded-full text-[9px] font-semibold shadow-sm backdrop-blur"
+                    style={{
+                        backgroundColor: isLight
+                            ? "rgba(0,0,0,0.85)"
+                            : "rgba(255,255,255,0.95)",
+                        color: isLight ? "#ffffff" : "#52525b",
+                    }}
+                >
                     {schoolCode}
                 </span>
 
@@ -85,22 +147,25 @@ export function SchoolCardMobile({
                     </span>
                 )}
 
-                <div className="absolute bottom-2.5 left-2.5 right-2.5">
-                    <div className="h-px w-full bg-white/25" />
-                </div>
+                <div
+                    className="absolute bottom-2.5 left-2.5 right-2.5 h-px"
+                    style={{
+                        backgroundColor: separatorColor,
+                    }}
+                />
             </div>
 
-            <div className="flex min-h-0 flex-1 flex-col px-1 pt-3">
-                <p className="line-clamp-2 text-center text-[12px] font-semibold leading-[1.15] tracking-[-0.02em] text-zinc-900">
+            <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-1 pt-2">
+                <p className="line-clamp-2 max-w-full text-center text-[12px] font-semibold leading-[1.15] tracking-[-0.02em] text-zinc-900">
                     {name}
                 </p>
 
                 {isOwnSchool ? (
                     <p className="mt-1.5 text-center text-[10px] text-zinc-400">
-                        You cannot vote for your own school
+                        Your school
                     </p>
                 ) : (
-                    <div className="mt-2 flex items-center justify-center gap-2 text-[9px] text-zinc-400">
+                    <div className="mt-1.5 flex items-center gap-1.5 text-[9px] text-zinc-400">
                         <span>
                             {voteCount}{" "}
                             {voteCount === 1 ? "vote" : "votes"}
