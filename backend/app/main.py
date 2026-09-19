@@ -40,5 +40,9 @@ app.include_router(user.router)
 app.include_router(vote.router)
 
 @app.get("/")
+def a():
+    return {"message": "Fight For Flag API"}
+
+@app.get("/api/backend/")
 def root():
     return {"message": "Fight For Flag API"}
