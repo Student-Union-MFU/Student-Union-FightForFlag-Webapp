@@ -54,7 +54,7 @@ def get_dashboard(
             School.color,
             func.count(Vote.id).label("vote_count"),
         )
-        .outerjoin(
+        .outerjoin( 
             Vote,
             Vote.school_id == School.id,
         )
@@ -78,12 +78,11 @@ def get_dashboard(
                 school_id=school.id,
                 school_name=school.name,
                 color=school.color,
-                school_code=school.id,
-                vote_count=school.vote
-                
+                school_code=school.code,
+                vote_count=school.vote_count,
             )
-            for school in schools
-        ],
+    for school in schools
+],
     )
 
 
