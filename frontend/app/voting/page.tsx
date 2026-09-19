@@ -16,19 +16,32 @@ interface VoteCountResponse {
     vote_count: number;
 }
 
+type VotePopup =
+    | {
+          type: "success" | "error";
+          title: string;
+          message: string;
+      }
+    | null;
+
 export default function VotingPage() {
     const { user, voteStatus, refetch } = useAuth();
 
-    const [votedSchool, setVotedSchool] = useState<string | null>(null);
-    const [votingSchool, setVotingSchool] = useState<string | null>(null);
-    const [showVoteConfirmation, setShowVoteConfirmation] =
-        useState(false);
+    const [votedSchool, setVotedSchool] =
+        useState<string | null>(null);
+
+    const [votingSchool, setVotingSchool] =
+        useState<string | null>(null);
+
+    const [votePopup, setVotePopup] =
+        useState<VotePopup>(null);
 
     const [schools, setSchools] =
         useState<School[]>(SCHOOLS);
 
     const startGoogleLogin = () => {
-        window.location.href = "/api/backend/auth/login";
+        window.location.href =
+            "/api/backend/auth/login";
     };
 
     const handleFetch = async () => {
@@ -100,15 +113,27 @@ export default function VotingPage() {
             }
 
             setVotedSchool(code);
-            setShowVoteConfirmation(true);
+
+            setVotePopup({
+                type: "success",
+                title: "Vote submitted",
+                message:
+                    "Your vote has been recorded. You can only vote once, and your vote cannot be changed.",
+            });
 
             refetch();
-
-            setTimeout(() => {
-                handleFetch();
-            }, 0);
+            handleFetch();
         } catch (err) {
-            console.error("Vote failed:", err);
+            const message =
+                err instanceof Error
+                    ? err.message
+                    : "Something went wrong while submitting your vote.";
+
+            setVotePopup({
+                type: "error",
+                title: "Vote failed",
+                message,
+            });
         } finally {
             setVotingSchool(null);
         }
@@ -307,89 +332,54 @@ export default function VotingPage() {
                 )}
             </Container>
 
-            {showVoteConfirmation && (
-                <div
-                    className="
-                        fixed
-                        inset-0
-                        z-50
-                        flex
-                        items-center
-                        justify-center
-                        bg-black/40
-                        px-5
-                        backdrop-blur-sm
-                    "
-                >
-                    <div
-                        className="
-                            w-full
-                            max-w-sm
-                            rounded-3xl
-                            bg-white
-                            p-7
-                            shadow-2xl
-                        "
-                    >
+            {votePopup && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-5 backdrop-blur-sm">
+                    <div className="w-full max-w-sm rounded-3xl bg-white p-7 shadow-2xl">
                         <div className="flex flex-col gap-5">
                             <div>
                                 <div
-                                    className="
-                                        mb-2
-                                        text-xs
-                                        font-semibold
-                                        tracking-[0.15em]
-                                        text-zinc-400
-                                    "
+                                    className={`mb-2 text-xs font-semibold tracking-[0.15em] ${
+                                        votePopup.type ===
+                                        "success"
+                                            ? "text-zinc-400"
+                                            : "text-red-500"
+                                    }`}
                                 >
-                                    VOTE SUBMITTED
+                                    {votePopup.type ===
+                                    "success"
+                                        ? "VOTE SUBMITTED"
+                                        : "VOTE FAILED"}
                                 </div>
 
-                                <h2
-                                    className="
-                                        text-2xl
-                                        font-medium
-                                        tracking-tight
-                                        text-zinc-900
-                                    "
-                                >
-                                    Your vote has been
-                                    recorded.
+                                <h2 className="text-2xl font-medium tracking-tight text-zinc-900">
+                                    {votePopup.title}
                                 </h2>
 
-                                <p
-                                    className="
-                                        mt-3
-                                        text-sm
-                                        leading-relaxed
-                                        text-zinc-500
-                                    "
-                                >
-                                    You can only vote once.
-                                    Your vote cannot be
-                                    changed after it has been
-                                    submitted.
+                                <p className="mt-3 text-sm leading-relaxed text-zinc-500">
+                                    {votePopup.message}
                                 </p>
                             </div>
 
                             <button
                                 onClick={() =>
-                                    setShowVoteConfirmation(
-                                        false
-                                    )
+                                    setVotePopup(null)
                                 }
-                                className="
+                                className={`
                                     h-11
                                     w-full
                                     rounded-xl
-                                    bg-zinc-900
                                     text-sm
                                     font-medium
                                     text-white
                                     transition
-                                    hover:bg-zinc-800
                                     active:scale-[0.98]
-                                "
+                                    ${
+                                        votePopup.type ===
+                                        "success"
+                                            ? "bg-zinc-900 hover:bg-zinc-800"
+                                            : "bg-red-600 hover:bg-red-500"
+                                    }
+                                `}
                             >
                                 Got it
                             </button>
