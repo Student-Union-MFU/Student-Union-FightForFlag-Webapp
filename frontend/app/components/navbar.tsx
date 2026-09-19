@@ -154,7 +154,7 @@ export default function Navbar() {
                             <div
                                 ref={containerRef}
                                 onClick={(e) => e.stopPropagation()}
-                                className="w-full flex flex-col pt-30 items-center gap-3 p-8"
+                                className="w-full h-auto flex flex-col pt-30 items-center gap-3 p-8"
                             >
                                 <div className="card w-full flex flex-col rounded-xl overflow-hidden bg-zinc-50 divide-y divide-zinc-200 shadow-xl">
                                     {links.map((e, i) => (
