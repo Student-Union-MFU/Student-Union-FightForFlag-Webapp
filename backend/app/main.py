@@ -41,6 +41,7 @@ app.include_router(auth.router, prefix="/api/backend")
 app.include_router(user.router, prefix="/api/backend")
 app.include_router(vote.router, prefix="/api/backend")
 app.include_router(eventsetting.router, prefix="/api/backend")
+app.include_router(admin.router, prefix="/api/backend")
 
 app.include_router(admin.router, prefix="/api/backend")
 
