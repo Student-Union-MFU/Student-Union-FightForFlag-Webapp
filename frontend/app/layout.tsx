@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Analytics />
         <AuthProvider>
           <Navbar />
-          <div className="w-full h-full flex flex-col px-4 md:px-16 lg:px-30">
+          <div className="w-full h-full flex flex-col px-4 md:px-16 lg:px-30 bg-zinc-100">
             {children}
           </div>
           <Footer />

@@ -134,7 +134,7 @@ export default function Home() {
               }
             </div>
 
-            <p className="flex w-50 text-center text-base lg:w-xl">
+            <p className="flex items-center justify-center w-50 text-center text-base lg:w-xl">
               {votingOpen
                 ? "Cast your vote before voting closes."
                 : "Thank you for participating in the event"}
