@@ -120,7 +120,7 @@ export default function Navbar() {
                 sidebarActive
                     ? "text-zinc-50 transition-colors duration-100"
                     : "text-zinc-900 duration-400",
-                "relative w-full px-4"
+                "relative w-full px-4 bg-zinc-100"
             )}
         >
             <nav
@@ -131,7 +131,7 @@ export default function Navbar() {
             >
                 <div className={clsx(
                     sidebarActive && "invert-100",
-                    "w-40 h-40 pt-4 invert-0 z-40 duration-200"
+                    "w-40 h-40 pt-4 invert-0 z-30 duration-200"
                 )}>
                     <img src="/logo.png" alt="Fight For Flag" className="w-full h-full object-fill" />
                 </div>

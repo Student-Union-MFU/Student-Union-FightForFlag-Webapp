@@ -30,7 +30,7 @@ export default function Login() {
   const [schools, setSchools] = useState<School[]>(SCHOOLS);
 
   const startGoogleLogin = () => {
-        window.location.href = "http://localhost:8000/auth/login"; 
+        window.location.href = `${backendUrl}/auth/login`;
     };
 
   const handleFetch = async () => {
