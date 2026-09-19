@@ -101,7 +101,7 @@ export default function Navbar() {
         <header
             className={clsx(
                 sidebarActive ? "text-zinc-50 transition-colors duration-200" : "text-zinc-900 duration-400",
-                "w-full min-h-screen px-4"
+                "w-full px-4"
             )}
         >
             <nav
@@ -182,7 +182,7 @@ export default function Navbar() {
                                         <Shell className="animate-spin size-5 text-zinc-500" />
                                     </div>
                                 ) : user ? (
-                                    <div className="flex flex-col gap-2 h-auto w-full">
+                                    <div className="flex flex-col gap-2 h-auto w-full pb-20">
                                         <div className="card flex flex-col w-full rounded-xl overflow-hidden bg-zinc-100 text-zinc-950 px-5 py-5">
                                             <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase truncate">{user.name}</p>
                                             <p className="text-4xl mt-1.5 truncate">{user.student_id}</p>
