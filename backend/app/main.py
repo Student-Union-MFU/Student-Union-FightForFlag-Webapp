@@ -13,8 +13,8 @@ from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 database = get_db()
 
-if database:
-    seed_schools()
+# if database:
+#     seed_schools()
 
 app.add_middleware(
     CORSMiddleware,
