@@ -35,9 +35,9 @@ app.add_middleware(
     https_only=False
 )
 
-app.include_router(auth.router)
-app.include_router(user.router)
-app.include_router(vote.router)
+app.include_router(auth.router, prefix="/api/backend")
+app.include_router(user.router, prefix="/api/backend")
+app.include_router(vote.router, prefix="/api/backend")
 
 @app.get("/")
 def a():
