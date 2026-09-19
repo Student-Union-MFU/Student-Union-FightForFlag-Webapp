@@ -1,9 +1,77 @@
-import Image from "next/image";
-import Container from "./components/container";
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
+
+import Container from "./components/container";
 import VerticalCardMarquee from "./components/marquee";
 
+interface VotingStatus {
+  id: number;
+  is_open: boolean;
+  starts_at: string | null;
+  ends_at: string | null;
+}
+
+function formatTimeLeft(endTime: string | null) {
+  if (!endTime) return "—";
+
+  const difference = new Date(endTime).getTime() - Date.now();
+
+  if (difference <= 0) {
+    return "00:00:00";
+  }
+
+  const totalSeconds = Math.floor(difference / 1000);
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (days > 0) {
+    return `${days}d ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+
 export default function Home() {
+  const [voting, setVoting] = useState<VotingStatus | null>(null);
+  const [timeLeft, setTimeLeft] = useState(formatTimeLeft("2026-09-19T18:00:00Z"));
+
+  useEffect(() => {
+    const getVotingStatus = async () => {
+      try {
+        const response = await fetch("/api/backend/voting/status");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch voting status");
+        }
+
+        const data: VotingStatus = await response.json();
+
+        setVoting(data);
+        setTimeLeft(formatTimeLeft(data.ends_at));
+      } catch (error) {
+        console.error("Failed to fetch voting status:", error);
+      }
+    };
+
+    getVotingStatus();
+  }, []);
+
+  useEffect(() => {
+    if (!voting?.ends_at || !voting.is_open) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft(formatTimeLeft(voting.ends_at));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [voting]);
+
+  const votingOpen = voting?.is_open === true;
+
   return (
     <main className="flex flex-1 flex-col items-center justify-center">
       <Container
@@ -18,12 +86,10 @@ export default function Home() {
           overflow-hidden
         "
       >
-        {/* Background */}
         <div className="absolute inset-0 z-0">
           <VerticalCardMarquee />
         </div>
 
-        {/* Foreground content */}
         <div
           className="
             relative
@@ -39,7 +105,7 @@ export default function Home() {
           "
         >
           <div className="flex flex-col items-center gap-4">
-            <p
+            <div
               className="
                 flex
                 flex-col
@@ -50,43 +116,57 @@ export default function Home() {
                 lg:text-9xl
               "
             >
-              <span className="text-base lg:text-xl">
-                Voting Closed in
-              </span>
-
-              2:15:09
-            </p>
-
-            <p className="flex w-xs text-center text-base lg:w-xl">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            </p>
-
-            <Link
-              href="/voting"
-              className="relative z-20"
-            >
-              <div
-                className="
-                  h-full
-                  w-fit
-                  rounded-full
-                  border-4
-                  border-transparent
-                  bg-zinc-900
-                  px-10
-                  py-3
-                  text-zinc-50
-                  transition-all
-                  cursor-pointer
-
-                  hover:border-zinc-900
-                  hover:bg-zinc-50
-                  hover:text-zinc-900
-                "
-              >
-                <p>Vote Now</p>
+              <div>
+                {votingOpen ? 
+                  <p className="text-base lg:text-xl">
+                    Voting Closes in
+                  </p>
+                  :
+                  <p className="text-center text-6xl">
+                    Voting Closed
+                  </p> 
+                }
               </div>
-            </Link>
+
+              {
+                votingOpen && 
+                  <p>{timeLeft}</p>
+              }
+            </div>
+
+            <p className="flex w-50 text-center text-base lg:w-xl">
+              {votingOpen
+                ? "Cast your vote before voting closes."
+                : "Thank you for participating in the event"}
+            </p>
+
+            {votingOpen && (
+              <Link
+                href="/voting"
+                className="relative z-20"
+              >
+                <div
+                  className="
+                    h-full
+                    w-fit
+                    cursor-pointer
+                    rounded-full
+                    border-4
+                    border-transparent
+                    bg-zinc-900
+                    px-10
+                    py-3
+                    text-zinc-50
+                    transition-all
+                    hover:border-zinc-900
+                    hover:bg-zinc-50
+                    hover:text-zinc-900
+                  "
+                >
+                  <p>Vote Now</p>
+                </div>
+              </Link>
+            )}
           </div>
         </div>
       </Container>

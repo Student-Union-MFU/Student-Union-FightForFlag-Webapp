@@ -7,6 +7,8 @@ from app.config import settings
 from app.routers import auth
 from app.routers import user
 from app.routers import vote
+from app.routers import eventsetting
+from app.routers import admin
 from app.scripts.seedschools import seed_schools
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -38,6 +40,9 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/backend")
 app.include_router(user.router, prefix="/api/backend")
 app.include_router(vote.router, prefix="/api/backend")
+app.include_router(eventsetting.router, prefix="/api/backend")
+
+app.include_router(admin.router, prefix="/api/backend")
 
 @app.get("/")
 def a():

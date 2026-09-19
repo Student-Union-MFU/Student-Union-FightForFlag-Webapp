@@ -4,6 +4,7 @@ import { getMajorCount } from "@/app/data/schools";
 interface SchoolCardProps {
   name: string;
   schoolCode: string;
+  color: string;
   voteCount: number;
   status: "default" | "voted" | "own-school";
   onVote?: () => void;
@@ -19,6 +20,7 @@ function getSchoolInitial(name: string): string {
 export function SchoolCardMobile({
   name,
   schoolCode,
+  color,
   voteCount,
   status,
   onVote,
@@ -36,7 +38,7 @@ export function SchoolCardMobile({
           group
           relative
           flex
-          h-[245px]
+          h-61.25
           flex-col
           overflow-hidden
           rounded-[22px]
@@ -63,13 +65,13 @@ export function SchoolCardMobile({
     >
       <div
         className="
-          relative
-          h-[112px]
-          shrink-0
-          overflow-hidden
-          rounded-[16px]
-          bg-zinc-100
-        "
+        relative
+        h-28
+        shrink-0
+        overflow-hidden
+        rounded-2xl
+    "
+        style={{ backgroundColor: color }}
       >
         <span
           className="
@@ -82,8 +84,8 @@ export function SchoolCardMobile({
             font-semibold
             leading-none
             tracking-[-0.12em]
-            text-zinc-200
-          "
+            text-white/20
+        "
         >
           {initial}
         </span>
@@ -96,12 +98,11 @@ export function SchoolCardMobile({
             -bottom-14
             size-32
             rounded-full
-            border-[14px]
-            border-white/80
-          "
+            border-14
+            border-white/30
+        "
         />
 
-        {/* School number */}
         <span
           className="
             absolute
@@ -117,25 +118,24 @@ export function SchoolCardMobile({
             font-semibold
             text-zinc-500
             shadow-sm
-          "
+        "
         >
           {schoolCode}
         </span>
 
-        {/* Voted badge */}
         {isVoted && (
           <span
             className="
-              absolute
-              right-2.5
-              top-2.5
-              rounded-full
-              bg-zinc-900
-              px-2.5
-              py-1
-              text-[9px]
-              font-medium
-              text-white
+                absolute
+                right-2.5
+                top-2.5
+                rounded-full
+                bg-zinc-900
+                px-2.5
+                py-1
+                text-[9px]
+                font-medium
+                text-white
             "
           >
             Voted
@@ -144,14 +144,14 @@ export function SchoolCardMobile({
 
         <div
           className="
+            pointer-events-none
             absolute
             inset-0
             flex
             items-center
             justify-center
-          "
-        >
-        </div>
+        "
+        />
       </div>
 
       <div

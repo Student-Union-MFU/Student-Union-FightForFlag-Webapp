@@ -164,7 +164,7 @@ export default function Login() {
             >
               <p
                 className="
-                  max-w-[340px]
+                  max-w-85
                   text-sm
                   leading-relaxed
                   text-zinc-500
@@ -213,18 +213,13 @@ export default function Login() {
                   key={school.id}
                   name={school.name}
                   voteCount={school.voteCount ?? 0}
-                  status={
-                    user?.school === school.name
-                      ? "own-school"
-                      : votedSchool === school.code
-                        ? "voted"
-                        : "default"
-                  }
+                  status={user?.school === school.name
+                    ? "own-school"
+                    : votedSchool === school.code
+                      ? "voted"
+                      : "default"}
                   schoolCode={school.code}
-                  onVote={() =>
-                    handleVote(school.code)
-                  }
-                />
+                  onVote={() => handleVote(school.code)} color={school.color}                />
               ))}
             </div>
 
@@ -234,18 +229,13 @@ export default function Login() {
                   key={school.id}
                   name={school.name}
                   voteCount={school.voteCount ?? 0}
-                  status={
-                    user?.school === school.name
-                      ? "own-school"
-                      : votedSchool === school.code
-                        ? "voted"
-                        : "default"
-                  }
+                  status={user?.school === school.name
+                    ? "own-school"
+                    : votedSchool === school.code
+                      ? "voted"
+                      : "default"}
                   schoolCode={school.code}
-                  onVote={() =>
-                    handleVote(school.code)
-                  }
-                />
+                  onVote={() => handleVote(school.code)} color={school.color}                />
               ))}
             </MasonryGrid>
           </> : 

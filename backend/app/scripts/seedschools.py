@@ -1,34 +1,95 @@
-# scripts/seed_schools.py
 from app.db import SessionLocal
 from models.school import School
 
+
 SCHOOL_CODE_MAP = {
-    "10": "School of Liberal Arts",
-    "11": "School of Science",
-    "12": "School of Management",
-    "14": "School of Agro-Industry",
-    "15": "School of Applied Digital Technology",
-    "16": "School of Law",
-    "17": "School of Cosmetic Science",
-    "18": "School of Health Science",
-    "19": "School of Nursing",
-    "21": "School of Medicine",
-    "22": "School of Dentistry",
-    "23": "School of Social Innovation",
-    "24": "School of Sinology",
-    "25": "School of Integrative Medicine",
+    "10": {
+        "name": "School of Liberal Arts",
+        "color": "#808285",
+    },
+    "11": {
+        "name": "School of Science",
+        "color": "#FFF100",
+    },
+    "12": {
+        "name": "School of Management",
+        "color": "#00ADFE",
+    },
+    "14": {
+        "name": "School of Agro-Industry",
+        "color": "#F499C1",
+    },
+    "15": {
+        "name": "School of Applied Digital Technology",
+        "color": "#140858",
+    },
+    "16": {
+        "name": "School of Law",
+        "color": "#FFFFFF",
+    },
+    "17": {
+        "name": "School of Cosmetic Science",
+        "color": "#EC008B",
+    },
+    "18": {
+        "name": "School of Health Science",
+        "color": "#4DAB47",
+    },
+    "19": {
+        "name": "School of Nursing",
+        "color": "#F5821F",
+    },
+    "21": {
+        "name": "School of Medicine",
+        "color": "#006400",
+    },
+    "22": {
+        "name": "School of Dentistry",
+        "color": "#642B8E",
+    },
+    "23": {
+        "name": "School of Social Innovation",
+        "color": "#FFECA9",
+    },
+    "24": {
+        "name": "School of Sinology",
+        "color": "#ED1C24",
+    },
+    "25": {
+        "name": "School of Integrative Medicine",
+        "color": "#40E0D0",
+    },
 }
+
 
 def seed_schools():
     db = SessionLocal()
+
     try:
-        for code, name in SCHOOL_CODE_MAP.items():
-            existing = db.query(School).filter(School.code == code).first()
-            if not existing:
-                db.add(School(code=code, name=name))
+        for code, data in SCHOOL_CODE_MAP.items():
+            existing = (
+                db.query(School)
+                .filter(School.code == code)
+                .first()
+            )
+
+            if existing:
+                existing.name = data["name"]
+                existing.color = data["color"]
+            else:
+                db.add(
+                    School(
+                        code=code,
+                        name=data["name"],
+                        color=data["color"],
+                    )
+                )
+
         db.commit()
+
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     seed_schools()

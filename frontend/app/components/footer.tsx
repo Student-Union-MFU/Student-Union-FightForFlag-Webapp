@@ -16,7 +16,7 @@ export function Footer() {
   return (
     <footer className="
         flex justify-between
-        w-full h-auto py-2 px-4
+        w-full h-auto py-2 px-4 bg-zinc-100
     ">
         <div className="hidden lg:flex lg:flex-col h-full w-auto text-2xl">
 
