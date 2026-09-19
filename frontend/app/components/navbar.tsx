@@ -187,6 +187,7 @@ export default function Navbar() {
                                     items-center
                                     gap-3
                                     px-4
+                                    z-40
                                 "
                             >
                                 <div className="card w-full flex flex-col rounded-xl overflow-hidden bg-zinc-50 divide-y divide-zinc-200 shadow-xl">

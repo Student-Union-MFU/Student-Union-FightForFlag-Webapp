@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from fastapi import Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from jose import JWTError
@@ -21,12 +23,9 @@ def get_current_user(
 
     try:
         payload = decode_access_token(token)
+        public_id = UUID(str(payload["sub"]))
 
-        user_id = int(payload["sub"])
-
-    except (JWTError, KeyError, ValueError) as e:
-        print("JWT ERROR:", repr(e))
-
+    except (JWTError, KeyError, ValueError):
         raise HTTPException(
             status_code=401,
             detail="Invalid token",
@@ -34,7 +33,7 @@ def get_current_user(
 
     user = (
         db.query(User)
-        .filter(User.id == user_id)
+        .filter(User.public_id == public_id)
         .first()
     )
 
