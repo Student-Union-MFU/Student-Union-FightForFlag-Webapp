@@ -148,13 +148,13 @@ export default function Navbar() {
                         <div
                             ref={backdropRef}
                             style={{ opacity: 0 }}
-                            className="fixed inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full"
+                            className="absolute inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full"
                             onClick={handleSidebarOnClick}
                         >
                             <div
                                 ref={containerRef}
                                 onClick={(e) => e.stopPropagation()}
-                                className="absolute w-full flex flex-col pt-30 items-center gap-3 p-8"
+                                className="w-full flex flex-col pt-30 items-center gap-3 p-8"
                             >
                                 <div className="card w-full flex flex-col rounded-xl overflow-hidden bg-zinc-50 divide-y divide-zinc-200 shadow-xl">
                                     {links.map((e, i) => (
