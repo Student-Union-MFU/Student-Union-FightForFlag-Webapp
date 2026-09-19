@@ -148,7 +148,7 @@ export default function Navbar() {
                         <div
                             ref={backdropRef}
                             style={{ opacity: 0 }}
-                            className="absolute inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full h-screen"
+                            className="fixed inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full min-h-screen"
                             onClick={handleSidebarOnClick}
                         >
                             <div
@@ -182,7 +182,7 @@ export default function Navbar() {
                                         <Shell className="animate-spin size-5 text-zinc-500" />
                                     </div>
                                 ) : user ? (
-                                    <>
+                                    <div className="flex flex-col gap-2 h-auto w-full">
                                         <div className="card flex flex-col w-full rounded-xl overflow-hidden bg-zinc-100 text-zinc-950 px-5 py-5">
                                             <p className="text-xs font-medium tracking-wide text-zinc-500 uppercase truncate">{user.name}</p>
                                             <p className="text-4xl mt-1.5 truncate">{user.student_id}</p>
@@ -195,7 +195,7 @@ export default function Navbar() {
                                             { buttonload? <LoaderCircle className="animate-spin" /> : <LogOut size={16} />}
                                             Log out
                                         </button>
-                                    </>
+                                    </div>
                                 ) : (
                                     <div className="card w-full rounded-xl overflow-hidden flex justify-end">
                                         <LoginMenu />
