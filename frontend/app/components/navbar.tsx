@@ -148,7 +148,7 @@ export default function Navbar() {
                         <div
                             ref={backdropRef}
                             style={{ opacity: 0 }}
-                            className="absolute inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full h-auto"
+                            className="absolute inset-0 z-20 bg-zinc-950 flex flex-col items-center justify-start w-full h-screen"
                             onClick={handleSidebarOnClick}
                         >
                             <div
