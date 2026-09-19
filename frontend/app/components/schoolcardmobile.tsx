@@ -8,13 +8,18 @@ interface SchoolCardProps {
     voteCount: number;
     status: "default" | "voted" | "own-school";
     onVote?: () => void;
+    isVoting?: boolean;
 }
 
 function getSchoolInitial(name: string): string {
     const trimmed = name.trim();
-    const withoutPrefix = trimmed.replace(/^school of\s+/i, "");
-
-    return (withoutPrefix || trimmed).charAt(0).toUpperCase();
+    const withoutPrefix = trimmed.replace(
+        /^school of\s+/i,
+        ""
+    );
+    return (withoutPrefix || trimmed)
+        .charAt(0)
+        .toUpperCase();
 }
 
 function isLightColor(color: string): boolean {
@@ -29,7 +34,8 @@ function isLightColor(color: string): boolean {
     const b = parseInt(hex.slice(4, 6), 16);
 
     const luminance =
-        (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        (0.299 * r + 0.587 * g + 0.114 * b) /
+        255;
 
     return luminance > 0.7;
 }
@@ -41,6 +47,7 @@ export function SchoolCardMobile({
     voteCount,
     status,
     onVote,
+    isVoting = false,
 }: SchoolCardProps) {
     const initial = getSchoolInitial(name);
     const majorCount = getMajorCount(schoolCode);
@@ -100,7 +107,8 @@ export function SchoolCardMobile({
                 <div
                     className="absolute -bottom-14 -left-10 size-36 rounded-full border-[20px]"
                     style={{
-                        borderColor: secondaryDecorativeColor,
+                        borderColor:
+                            secondaryDecorativeColor,
                     }}
                 />
 
@@ -129,7 +137,9 @@ export function SchoolCardMobile({
                         backgroundColor: isLight
                             ? "rgba(0,0,0,0.85)"
                             : "rgba(255,255,255,0.95)",
-                        color: isLight ? "#ffffff" : "#52525b",
+                        color: isLight
+                            ? "#ffffff"
+                            : "#52525b",
                     }}
                 >
                     {schoolCode}
@@ -150,7 +160,8 @@ export function SchoolCardMobile({
                 <div
                     className="absolute bottom-2.5 left-2.5 right-2.5 h-px"
                     style={{
-                        backgroundColor: separatorColor,
+                        backgroundColor:
+                            separatorColor,
                     }}
                 />
             </div>
@@ -168,14 +179,18 @@ export function SchoolCardMobile({
                     <div className="mt-1.5 flex items-center gap-1.5 text-[9px] text-zinc-400">
                         <span>
                             {voteCount}{" "}
-                            {voteCount === 1 ? "vote" : "votes"}
+                            {voteCount === 1
+                                ? "vote"
+                                : "votes"}
                         </span>
 
                         <span className="size-1 rounded-full bg-zinc-300" />
 
                         <span>
                             {majorCount}{" "}
-                            {majorCount === 1 ? "major" : "majors"}
+                            {majorCount === 1
+                                ? "major"
+                                : "majors"}
                         </span>
                     </div>
                 )}
@@ -183,19 +198,29 @@ export function SchoolCardMobile({
 
             <button
                 onClick={onVote}
-                disabled={isVoted || isOwnSchool}
+                disabled={
+                    isVoted ||
+                    isOwnSchool ||
+                    isVoting
+                }
                 className={clsx(
-                    "h-9 w-full shrink-0 rounded-[11px] text-[10px] font-medium transition-all duration-200",
-                    isVoted || isOwnSchool
+                    "flex h-9 w-full shrink-0 items-center justify-center rounded-[11px] text-[10px] font-medium transition-all duration-200",
+                    isVoted ||
+                        isOwnSchool ||
+                        isVoting
                         ? "cursor-not-allowed bg-zinc-100 text-zinc-400"
                         : "bg-zinc-900 text-white hover:bg-zinc-800 active:scale-[0.98]"
                 )}
             >
-                {isVoted
-                    ? "Voted"
-                    : isOwnSchool
-                      ? "Your school"
-                      : "Vote"}
+                {isVoting ? (
+                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-zinc-300 border-t-zinc-700" />
+                ) : isVoted ? (
+                    "Voted"
+                ) : isOwnSchool ? (
+                    "Your school"
+                ) : (
+                    "Vote"
+                )}
             </button>
         </div>
     );

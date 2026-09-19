@@ -33,6 +33,9 @@ export default function VotingPage() {
     const [votingSchool, setVotingSchool] =
         useState<string | null>(null);
 
+    const [confirmSchool, setConfirmSchool] =
+        useState<School | null>(null);
+
     const [votePopup, setVotePopup] =
         useState<VotePopup>(null);
 
@@ -87,11 +90,28 @@ export default function VotingPage() {
         }
     };
 
+    const requestVote = (code: string) => {
+        if (!user || votedSchool || votingSchool) {
+            return;
+        }
+
+        const school = schools.find(
+            (item) => item.code === code
+        );
+
+        if (!school) {
+            return;
+        }
+
+        setConfirmSchool(school);
+    };
+
     const handleVote = async (code: string) => {
         if (!user || votedSchool || votingSchool) {
             return;
         }
 
+        setConfirmSchool(null);
         setVotingSchool(code);
 
         try {
@@ -286,9 +306,13 @@ export default function VotingPage() {
                                         school.code
                                     }
                                     onVote={() =>
-                                        handleVote(
+                                        requestVote(
                                             school.code
                                         )
+                                    }
+                                    isVoting={
+                                        votingSchool ===
+                                        school.code
                                     }
                                     color={school.color}
                                 />
@@ -316,9 +340,14 @@ export default function VotingPage() {
                                         school.code
                                     }
                                     onVote={() =>
-                                        handleVote(
+                                        requestVote(
                                             school.code
                                         )
+                                    }
+                                    
+                                    isVoting={
+                                        votingSchool ===
+                                        school.code
                                     }
                                     color={school.color}
                                 />
@@ -332,8 +361,80 @@ export default function VotingPage() {
                 )}
             </Container>
 
-            {votePopup && (
+            {confirmSchool && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-5 backdrop-blur-sm">
+                    <div className="w-full max-w-sm rounded-3xl bg-white p-7 shadow-2xl">
+                        <div className="flex flex-col gap-6">
+                            <div>
+                                <div className="mb-2 text-xs font-semibold tracking-[0.15em] text-zinc-400">
+                                    CONFIRM YOUR VOTE
+                                </div>
+
+                                <h2 className="text-2xl font-medium tracking-tight text-zinc-900">
+                                    Vote for{" "}
+                                    {confirmSchool.name}?
+                                </h2>
+
+                                <p className="mt-3 text-sm leading-relaxed text-zinc-500">
+                                    You can only vote once.
+                                    Once submitted, your
+                                    vote cannot be changed.
+                                </p>
+                            </div>
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() =>
+                                        setConfirmSchool(
+                                            null
+                                        )
+                                    }
+                                    className="
+                                        h-11
+                                        flex-1
+                                        rounded-xl
+                                        border
+                                        border-zinc-200
+                                        text-sm
+                                        font-medium
+                                        text-zinc-700
+                                        transition
+                                        hover:bg-zinc-50
+                                        active:scale-[0.98]
+                                    "
+                                >
+                                    Cancel
+                                </button>
+
+                                <button
+                                    onClick={() =>
+                                        handleVote(
+                                            confirmSchool.code
+                                        )
+                                    }
+                                    className="
+                                        h-11
+                                        flex-1
+                                        rounded-xl
+                                        bg-zinc-900
+                                        text-sm
+                                        font-medium
+                                        text-white
+                                        transition
+                                        hover:bg-zinc-800
+                                        active:scale-[0.98]
+                                    "
+                                >
+                                    Confirm Vote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {votePopup && (
+                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-5 backdrop-blur-sm">
                     <div className="w-full max-w-sm rounded-3xl bg-white p-7 shadow-2xl">
                         <div className="flex flex-col gap-5">
                             <div>

@@ -1,7 +1,5 @@
 import { useRef } from "react";
-
 import clsx from "clsx";
-
 import { getMajorCount } from "@/app/data/schools";
 
 interface SchoolCardProps {
@@ -11,13 +9,19 @@ interface SchoolCardProps {
     voteCount: number;
     status: "default" | "voted" | "own-school";
     onVote?: () => void;
+    isVoting?: boolean;
 }
 
 function getSchoolInitial(name: string): string {
     const trimmed = name.trim();
-    const withoutPrefix = trimmed.replace(/^school of\s+/i, "");
+    const withoutPrefix = trimmed.replace(
+        /^school of\s+/i,
+        ""
+    );
 
-    return (withoutPrefix || trimmed).charAt(0).toUpperCase();
+    return (withoutPrefix || trimmed)
+        .charAt(0)
+        .toUpperCase();
 }
 
 export function SchoolCard({
@@ -27,6 +31,7 @@ export function SchoolCard({
     voteCount,
     status,
     onVote,
+    isVoting = false,
 }: SchoolCardProps) {
     const cardRef = useRef<HTMLDivElement>(null);
 
@@ -48,10 +53,17 @@ export function SchoolCard({
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        const rotateY = ((x / rect.width) - 0.5) * 16;
-        const rotateX = ((y / rect.height) - 0.5) * -16;
+        const rotateY =
+            (x / rect.width - 0.5) * 16;
 
-        card.style.transform = `rotateX(${rotateX.toFixed(1)}deg) rotateY(${rotateY.toFixed(1)}deg) scale(1.03)`;
+        const rotateX =
+            (y / rect.height - 0.5) * -16;
+
+        card.style.transform = `rotateX(${rotateX.toFixed(
+            1
+        )}deg) rotateY(${rotateY.toFixed(
+            1
+        )}deg) scale(1.03)`;
     };
 
     const handleMouseLeave = () => {
@@ -74,7 +86,7 @@ export function SchoolCard({
                     willChange: "transform",
                 }}
                 className={clsx(
-                    "relative flex flex-col w-full h-110 p-6 rounded-2xl bg-zinc-50 transition-[border-color] duration-150",
+                    "relative flex h-110 w-full flex-col rounded-2xl bg-zinc-50 p-6 transition-[border-color] duration-150",
                     isVoted
                         ? "border-2 border-zinc-600"
                         : "border border-zinc-300",
@@ -82,58 +94,63 @@ export function SchoolCard({
                 )}
             >
                 {isVoted && (
-                    <span className="absolute -top-3 right-0 px-4 rounded-full bg-zinc-900 text-zinc-50">
+                    <span className="absolute -top-3 right-0 rounded-full bg-zinc-900 px-4 text-zinc-50">
                         Voted
                     </span>
                 )}
 
-                <p className="text-xs tracking-wide text-zinc-400 uppercase mb-4">
+                <p className="mb-4 text-xs uppercase tracking-wide text-zinc-400">
                     School vote id
                 </p>
 
-                <div className="flex-1 flex flex-col items-center justify-center gap-4">
+                <div className="flex flex-1 flex-col items-center justify-center gap-4">
                     <div
-                        className="size-24 rounded-xl flex items-center justify-center text-3xl font-medium text-white shrink-0 shadow-sm"
-                        style={{ backgroundColor: color }}
+                        className="flex size-24 shrink-0 items-center justify-center rounded-xl text-3xl font-medium text-white shadow-sm"
+                        style={{
+                            backgroundColor: color,
+                        }}
                     >
                         {initial}
                     </div>
 
-                    <p className="text-xl font-medium text-zinc-900 text-center line-clamp-2">
+                    <p className="line-clamp-2 text-center text-xl font-medium text-zinc-900">
                         {name}
                     </p>
 
-                    <div className="w-full border-t border-zinc-200 mt-1 pt-3.5 flex justify-between">
+                    <div className="mt-1 flex w-full justify-between border-t border-zinc-200 pt-3.5">
                         <div>
-                            <p className="text-[10px] text-zinc-400 uppercase tracking-wide mb-1">
+                            <p className="mb-1 text-[10px] uppercase tracking-wide text-zinc-400">
                                 School id
                             </p>
-                            <p className="text-sm text-zinc-600 text-center">
+
+                            <p className="text-center text-sm text-zinc-600">
                                 {schoolCode}
                             </p>
                         </div>
 
                         <div>
-                            <p className="text-[10px] text-zinc-400 uppercase tracking-wide mb-1">
+                            <p className="mb-1 text-[10px] uppercase tracking-wide text-zinc-400">
                                 Votes
                             </p>
-                            <p className="text-sm text-zinc-600 text-center">
+
+                            <p className="text-center text-sm text-zinc-600">
                                 {voteCount}
                             </p>
                         </div>
 
                         <div>
-                            <p className="text-[10px] text-zinc-400 uppercase tracking-wide mb-1">
+                            <p className="mb-1 text-[10px] uppercase tracking-wide text-zinc-400">
                                 Majors
                             </p>
-                            <p className="text-sm text-zinc-600 text-center">
+
+                            <p className="text-center text-sm text-zinc-600">
                                 {majorCount}
                             </p>
                         </div>
                     </div>
 
                     {isOwnSchool && (
-                        <p className="text-sm text-zinc-400 text-center">
+                        <p className="text-center text-sm text-zinc-400">
                             You can't vote for your own school
                         </p>
                     )}
@@ -141,19 +158,29 @@ export function SchoolCard({
 
                 <button
                     onClick={onVote}
-                    disabled={isVoted || isOwnSchool}
+                    disabled={
+                        isVoted ||
+                        isOwnSchool ||
+                        isVoting
+                    }
                     className={clsx(
-                        "w-full h-12 rounded-lg text-base font-medium mt-4 shrink-0",
-                        isVoted || isOwnSchool
-                            ? "bg-zinc-100 text-zinc-400 cursor-not-allowed"
+                        "mt-4 flex h-12 w-full shrink-0 items-center justify-center rounded-lg text-base font-medium",
+                        isVoted ||
+                            isOwnSchool ||
+                            isVoting
+                            ? "cursor-not-allowed bg-zinc-100 text-zinc-400"
                             : "bg-zinc-900 text-zinc-50 hover:bg-zinc-800"
                     )}
                 >
-                    {isVoted
-                        ? "Voted"
-                        : isOwnSchool
-                          ? "Your school"
-                          : "Vote"}
+                    {isVoting ? (
+                        <span className="h-5 w-5 animate-spin rounded-full border-2 border-zinc-400 border-t-zinc-700" />
+                    ) : isVoted ? (
+                        "Voted"
+                    ) : isOwnSchool ? (
+                        "Your school"
+                    ) : (
+                        "Vote"
+                    )}
                 </button>
             </div>
         </div>
