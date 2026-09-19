@@ -2,7 +2,7 @@
 
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
-const backendUrl = "http://localhost:8000";
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export interface UserInterface {
   public_id: string;

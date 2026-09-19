@@ -21,6 +21,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://172.25.4.133",
+        "https://student-union-fight-for-flag-webapp.vercel.app/"
     ],
     allow_credentials=True,
     allow_methods=["*"],
