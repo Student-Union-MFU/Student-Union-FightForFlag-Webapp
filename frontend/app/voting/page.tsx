@@ -98,7 +98,7 @@ export default function Login() {
   }, [voteStatus?.voted_school_code]);
 
   return (
-    <main className="flex h-full w-full flex-col items-center">
+    <main className="flex h-full w-full flex-col items-center bg-zinc-100">
       <Container
         className="
           flex
@@ -108,16 +108,14 @@ export default function Login() {
           flex-col
           gap-12
           py-10
-
           sm:gap-14
-
+  
           lg:gap-20
           lg:py-20
         "
       >
         <div className="w-full">
           <div className="flex flex-col gap-5 lg:gap-7">
-            {/* Eyebrow */}
             <div className="flex items-center gap-3">
               <span
                 className="
@@ -145,11 +143,11 @@ export default function Login() {
                 lg:text-[clamp(5rem,8vw,8rem)]
               "
             >
-              Vote For
+              Vote For Your
               <br />
 
               <span className="text-zinc-400">
-                Your School
+                Favourite School
               </span>
             </h1>
 
