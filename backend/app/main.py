@@ -43,7 +43,16 @@ app.include_router(vote.router, prefix="/api/backend")
 app.include_router(eventsetting.router, prefix="/api/backend")
 app.include_router(admin.router, prefix="/api/backend")
 
-app.include_router(admin.router, prefix="/api/backend")
+print("\n=== REGISTERED ROUTES ===")
+
+for route in app.routes:
+    path = getattr(route, "path", None)
+    methods = getattr(route, "methods", None)
+
+    if path:
+        print(path, methods)
+
+print("=========================\n")
 
 @app.get("/")
 def a():

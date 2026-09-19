@@ -116,3 +116,4 @@ def toggle_voting(
     return {
         "is_open": voting.is_open
     }
+    
