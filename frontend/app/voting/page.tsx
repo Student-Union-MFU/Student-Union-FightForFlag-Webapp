@@ -14,15 +14,22 @@ interface VoteCountResponse {
     school_code: string;
     school_name: string;
     vote_count: number;
-    color: string;
 }
 
 export default function VotingPage() {
     const { user, voteStatus, refetch } = useAuth();
 
     const [votedSchool, setVotedSchool] = useState<string | null>(null);
-    const [schools, setSchools] = useState<School[]>(SCHOOLS);
     const [votingSchool, setVotingSchool] = useState<string | null>(null);
+    const [showVoteConfirmation, setShowVoteConfirmation] =
+        useState(false);
+
+    const [schools, setSchools] =
+        useState<School[]>(SCHOOLS);
+
+    const startGoogleLogin = () => {
+        window.location.href = "/api/backend/auth/login";
+    };
 
     const handleFetch = async () => {
         try {
@@ -35,11 +42,14 @@ export default function VotingPage() {
             );
 
             if (!res.ok) {
-                console.error("Failed to fetch vote counts");
+                console.error(
+                    "Failed to fetch vote counts"
+                );
                 return;
             }
 
-            const data: VoteCountResponse[] = await res.json();
+            const data: VoteCountResponse[] =
+                await res.json();
 
             const merged = SCHOOLS.map((school) => {
                 const match = data.find(
@@ -56,10 +66,10 @@ export default function VotingPage() {
             });
 
             setSchools(merged);
-        } catch (error) {
+        } catch (err) {
             console.error(
                 "Fetching vote counts failed:",
-                error
+                err
             );
         }
     };
@@ -84,17 +94,21 @@ export default function VotingPage() {
 
             if (!res.ok) {
                 throw new Error(
-                    data.detail || "Failed to cast vote"
+                    data.detail ||
+                        "Failed to cast vote"
                 );
             }
 
             setVotedSchool(code);
+            setShowVoteConfirmation(true);
 
-            await handleFetch();
+            refetch();
 
-            await refetch();
-        } catch (error) {
-            console.error("Vote failed:", error);
+            setTimeout(() => {
+                handleFetch();
+            }, 0);
+        } catch (err) {
+            console.error("Vote failed:", err);
         } finally {
             setVotingSchool(null);
         }
@@ -182,12 +196,16 @@ export default function VotingPage() {
                                     lg:text-base
                                 "
                             >
-                                Choose the school you want to represent
-                                and cast your vote for Fight For Flag 26.
+                                Choose the school you want
+                                to represent and cast your
+                                vote for Fight For Flag 26.
                             </p>
 
                             {!user && (
                                 <button
+                                    onClick={
+                                        startGoogleLogin
+                                    }
                                     className="
                                         w-fit
                                         rounded-full
@@ -231,14 +249,17 @@ export default function VotingPage() {
                                         school.voteCount ?? 0
                                     }
                                     status={
-                                        user.school === school.name
+                                        user.school ===
+                                        school.name
                                             ? "own-school"
                                             : votedSchool ===
                                                 school.code
                                               ? "voted"
                                               : "default"
                                     }
-                                    schoolCode={school.code}
+                                    schoolCode={
+                                        school.code
+                                    }
                                     onVote={() =>
                                         handleVote(
                                             school.code
@@ -258,14 +279,17 @@ export default function VotingPage() {
                                         school.voteCount ?? 0
                                     }
                                     status={
-                                        user.school === school.name
+                                        user.school ===
+                                        school.name
                                             ? "own-school"
                                             : votedSchool ===
                                                 school.code
                                               ? "voted"
                                               : "default"
                                     }
-                                    schoolCode={school.code}
+                                    schoolCode={
+                                        school.code
+                                    }
                                     onVote={() =>
                                         handleVote(
                                             school.code
@@ -282,6 +306,97 @@ export default function VotingPage() {
                     </div>
                 )}
             </Container>
+
+            {showVoteConfirmation && (
+                <div
+                    className="
+                        fixed
+                        inset-0
+                        z-50
+                        flex
+                        items-center
+                        justify-center
+                        bg-black/40
+                        px-5
+                        backdrop-blur-sm
+                    "
+                >
+                    <div
+                        className="
+                            w-full
+                            max-w-sm
+                            rounded-3xl
+                            bg-white
+                            p-7
+                            shadow-2xl
+                        "
+                    >
+                        <div className="flex flex-col gap-5">
+                            <div>
+                                <div
+                                    className="
+                                        mb-2
+                                        text-xs
+                                        font-semibold
+                                        tracking-[0.15em]
+                                        text-zinc-400
+                                    "
+                                >
+                                    VOTE SUBMITTED
+                                </div>
+
+                                <h2
+                                    className="
+                                        text-2xl
+                                        font-medium
+                                        tracking-tight
+                                        text-zinc-900
+                                    "
+                                >
+                                    Your vote has been
+                                    recorded.
+                                </h2>
+
+                                <p
+                                    className="
+                                        mt-3
+                                        text-sm
+                                        leading-relaxed
+                                        text-zinc-500
+                                    "
+                                >
+                                    You can only vote once.
+                                    Your vote cannot be
+                                    changed after it has been
+                                    submitted.
+                                </p>
+                            </div>
+
+                            <button
+                                onClick={() =>
+                                    setShowVoteConfirmation(
+                                        false
+                                    )
+                                }
+                                className="
+                                    h-11
+                                    w-full
+                                    rounded-xl
+                                    bg-zinc-900
+                                    text-sm
+                                    font-medium
+                                    text-white
+                                    transition
+                                    hover:bg-zinc-800
+                                    active:scale-[0.98]
+                                "
+                            >
+                                Got it
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }
