@@ -61,6 +61,7 @@ def get_vote_counts(
             school_code=school.code,
             school_name=school.name,
             vote_count=counts_by_school.get(school.id, 0),
+            color=school.color
         )
         for school in schools
     ]

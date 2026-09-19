@@ -2,8 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.auth.dependencies import get_current_user
-from app.config import settings
+from app.auth.dependencies import require_admin
 from app.db import get_db
 
 from models.user import User
@@ -17,19 +16,11 @@ from schemas.admin import (
     VotingToggle,
 )
 
-router = APIRouter(prefix="/admin", tags=["Admin"])
 
-
-def require_admin(
-    current_user: User = Depends(get_current_user),
-):
-    if current_user.student_id != settings.admin_id:
-        raise HTTPException(
-            status_code=403,
-            detail="Not authorized",
-        )
-
-    return current_user
+router = APIRouter(
+    prefix="/admin",
+    tags=["Admin"],
+)
 
 
 @router.get(
@@ -58,13 +49,18 @@ def get_dashboard(
     schools = (
         db.query(
             School.id,
+            School.code,
             School.name,
             School.color,
-            func.count(Vote.id).label("votes"),
+            func.count(Vote.id).label("vote_count"),
         )
-        .outerjoin(Vote, Vote.school_id == School.id)
+        .outerjoin(
+            Vote,
+            Vote.school_id == School.id,
+        )
         .group_by(
             School.id,
+            School.code,
             School.name,
             School.color,
         )
@@ -82,16 +78,16 @@ def get_dashboard(
                 school_id=school.id,
                 school_name=school.name,
                 color=school.color,
-                votes=school.votes,
+                school_code=school.id,
+                vote_count=school.vote
+                
             )
             for school in schools
         ],
     )
 
 
-@router.patch(
-    "/voting",
-)
+@router.patch("/voting")
 def toggle_voting(
     data: VotingToggle,
     db: Session = Depends(get_db),
@@ -108,7 +104,9 @@ def toggle_voting(
             id=1,
             is_open=data.is_open,
         )
+
         db.add(voting)
+
     else:
         voting.is_open = data.is_open
 
@@ -116,5 +114,5 @@ def toggle_voting(
     db.refresh(voting)
 
     return {
-        "is_open": voting.is_open,
+        "is_open": voting.is_open
     }

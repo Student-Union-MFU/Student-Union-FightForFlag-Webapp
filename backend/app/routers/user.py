@@ -25,6 +25,8 @@ def get_current_user(request: Request, db: Session = Depends(get_db)) -> UserRes
     user = db.query(User).filter(User.public_id == public_id).first()
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
+    
+    print("TOKEN:", token)
 
     return UserResponse.model_validate(user)
 

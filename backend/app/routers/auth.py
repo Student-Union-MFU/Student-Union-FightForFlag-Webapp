@@ -46,13 +46,13 @@ async def auth_callback(request: Request, db: Session = Depends(get_db)):
 
     response = RedirectResponse(url=settings.frontend_url)
     response.set_cookie(
-        "access_token",
-        jwt_token,
+        key="access_token",
+        value=token,
         httponly=True,
+        secure=True,
         samesite="lax",
         max_age=60 * 60 * 24 * 7,
     )
-    return response
 
 
 @router.post("/logout")
