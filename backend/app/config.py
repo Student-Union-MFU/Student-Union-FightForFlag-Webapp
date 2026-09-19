@@ -18,7 +18,7 @@ def _require(key: str) -> str:
     return value
 
 settings = Settings(
-    database_url=_require("DATABASE_URL_LOCAL"),
+    database_url=_require("DATABASE_URL"),
     google_client_id=_require("GOOGLE_CLIENT_ID"),
     google_client_secret=_require("GOOGLE_CLIENT_SECRET"),
     jwt_secret=_require("JWT_SECRET"),
