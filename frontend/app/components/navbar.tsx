@@ -118,7 +118,7 @@ export default function Navbar() {
         <header
             className={clsx(
                 sidebarActive
-                    ? "text-zinc-50 transition-colors duration-200"
+                    ? "text-zinc-50 transition-colors duration-100"
                     : "text-zinc-900 duration-400",
                 "relative w-full px-4"
             )}
@@ -129,11 +129,12 @@ export default function Navbar() {
                     "w-full h-30 lg:h-40 mx-auto lg:py-6"
                 )}
             >
-                <h1 className="relative text-3xl lg:text-4xl z-40">
-                    Fight For Flag
-                    <span className="absolute text-xl">26</span>
-                </h1>
-
+                <div className={clsx(
+                    sidebarActive && "invert-100",
+                    "w-40 h-40 pt-4 invert-0 z-40 duration-200"
+                )}>
+                    <img src="/logo.png" alt="Fight For Flag" className="w-full h-full object-fill" />
+                </div>
                 <div className="hidden md:flex lg:flex items-center w-auto h-auto text-3xl gap-10">
                     <div className="flex items-center justify-between gap-20">
                         {links.map((e, i) => (
@@ -182,10 +183,10 @@ export default function Navbar() {
                                 className="
                                     w-full min-h-screen
                                     flex flex-col
-                                    pt-30
+                                    pt-36
                                     items-center
                                     gap-3
-                                    p-8
+                                    px-4
                                 "
                             >
                                 <div className="card w-full flex flex-col rounded-xl overflow-hidden bg-zinc-50 divide-y divide-zinc-200 shadow-xl">
