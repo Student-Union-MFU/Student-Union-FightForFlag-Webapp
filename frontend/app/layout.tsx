@@ -12,7 +12,7 @@ const stackSansNotch = Stack_Sans_Notch({
 
 export const metadata: Metadata = {
   title: "Fight For Flag | Student Union",
-  description: "uhh",
+  description: "ลูกแม่ฟ้าชิงธง ประจำปีการศึกษา 2569",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

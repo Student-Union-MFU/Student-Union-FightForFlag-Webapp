@@ -9,6 +9,8 @@ import { SCHOOLS, School } from "@/app/data/schools";
 import { SchoolCardMobile } from "../components/schoolcardmobile";
 import { Lock } from "lucide-react";
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 interface VoteCountResponse {
     school_id: number;
     school_code: string;
@@ -44,13 +46,13 @@ export default function VotingPage() {
 
     const startGoogleLogin = () => {
         window.location.href =
-            "/api/backend/auth/login";
+            `${backendUrl}/auth/login`;
     };
 
     const handleFetch = async () => {
         try {
             const res = await fetch(
-                "/api/backend/votes/counts",
+                `${backendUrl}/votes/counts`,
                 {
                     credentials: "include",
                     cache: "no-store",
@@ -116,7 +118,7 @@ export default function VotingPage() {
 
         try {
             const res = await fetch(
-                `/api/backend/votes/${code}`,
+                `${backendUrl}/votes/${code}`,
                 {
                     method: "POST",
                     credentials: "include",
@@ -363,7 +365,7 @@ export default function VotingPage() {
 
             {confirmSchool && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-5 backdrop-blur-sm">
-                    <div className="w-full max-w-sm rounded-3xl bg-white p-7 shadow-2xl">
+                    <div className="popup-confirm w-full max-w-sm rounded-3xl bg-zinc-50 p-7 shadow-2xl">
                         <div className="flex flex-col gap-6">
                             <div>
                                 <div className="mb-2 text-xs font-semibold tracking-[0.15em] text-zinc-400">
@@ -434,7 +436,7 @@ export default function VotingPage() {
             )}
 
             {votePopup && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 px-5 backdrop-blur-sm">
+                <div className="popup-decision fixed inset-0 z-60 flex items-center justify-center bg-black/40 px-5 backdrop-blur-sm">
                     <div className="w-full max-w-sm rounded-3xl bg-white p-7 shadow-2xl">
                         <div className="flex flex-col gap-5">
                             <div>
