@@ -28,10 +28,10 @@ async def auth_callback(
 
     try:
         info = parse_mfu_student_email(userinfo["email"])
-    except ValueError as e:
-        raise HTTPException(
-            status_code=403,
-            detail=str(e),
+    except ValueError:
+        return RedirectResponse(
+            url=f"{settings.frontend_url}/error?reason=invalid-account",
+            status_code=302,
         )
 
     user = (
