@@ -4,7 +4,10 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import {
+    Building2,
     Ellipsis,
+    GraduationCap,
+    Hash,
     LoaderCircle,
     LogOut,
     Shell,
@@ -25,25 +28,15 @@ export default function Navbar() {
     const [sidebarActive, setSidebarActive] = useState<boolean>(false);
     const [rendered, setRendered] = useState<boolean>(false);
     const [buttonload, setButtonload] = useState<boolean>(false);
-    const [sidebarAnimating, setSidebarAnimating] = useState<boolean>(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
     const backdropRef = useRef<HTMLDivElement>(null);
-    const sidebarAnimatingRef = useRef(false);
 
     const { user, loading, logout } = useAuth();
 
     const handleSidebarOnClick = () => {
-        if (sidebarAnimatingRef.current) return;
-
-        sidebarAnimatingRef.current = true;
-        setSidebarAnimating(true);
-
-        if (!sidebarActive) {
-            setRendered(true);
-        }
-
-        setSidebarActive((prev) => !prev);
+        if (!sidebarActive) setRendered(true);
+        setSidebarActive(!sidebarActive);
     };
 
     const handleLogout = () => {
@@ -68,12 +61,7 @@ export default function Navbar() {
 
             const tl = gsap.timeline({
                 onComplete: () => {
-                    if (!sidebarActive) {
-                        setRendered(false);
-                    }
-
-                    sidebarAnimatingRef.current = false;
-                    setSidebarAnimating(false);
+                    if (!sidebarActive) setRendered(false);
                 },
             });
 
@@ -141,19 +129,12 @@ export default function Navbar() {
                     "w-full h-30 lg:h-40 mx-auto lg:py-6"
                 )}
             >
-                <div
-                    className={clsx(
-                        sidebarActive && "invert-100",
-                        "w-40 h-40 pt-4 invert-0 z-30 duration-200"
-                    )}
-                >
-                    <img
-                        src="/logo.png"
-                        alt="Fight For Flag"
-                        className="w-full h-full object-fill"
-                    />
+                <div className={clsx(
+                    sidebarActive && "invert-100",
+                    "w-40 h-40 pt-4 invert-0 z-30 duration-200"
+                )}>
+                    <img src="/logo.png" alt="Fight For Flag" className="w-full h-full object-fill" />
                 </div>
-
                 <div className="hidden md:flex lg:flex items-center w-auto h-auto text-3xl gap-10">
                     <div className="flex items-center justify-between gap-20">
                         {links.map((e, i) => (
@@ -169,12 +150,10 @@ export default function Navbar() {
                 <div className="flex md:hidden lg:hidden w-auto h-12 text-2xl">
                     <button
                         onClick={handleSidebarOnClick}
-                        disabled={sidebarAnimating}
                         className="
                             flex items-center justify-around size-12
                             rounded-full bg-zinc-900 text-zinc-50
                             group transition-all z-40
-                            disabled:cursor-default
                         "
                     >
                         <Ellipsis
@@ -208,7 +187,6 @@ export default function Navbar() {
                                     items-center
                                     gap-3
                                     px-4
-                                    z-40
                                 "
                             >
                                 <div className="card w-full flex flex-col rounded-xl overflow-hidden bg-zinc-50 divide-y divide-zinc-200 shadow-xl">
@@ -235,11 +213,11 @@ export default function Navbar() {
                                     </p>
 
                                     <p className="text-xs text-zinc-500">
-                                        123 University Ave, Chiang Rai
+                                        124, D1 Food Court, Mae Fah Luang University
                                     </p>
 
                                     <p className="text-xs text-zinc-500">
-                                        contact@studentunion.ac.th
+                                        student-union@lamduan.mfu.ac.th
                                     </p>
                                 </div>
 
@@ -264,6 +242,7 @@ export default function Navbar() {
 
                                             <p className="text-xs text-zinc-600 mt-0.5 leading-tight truncate">
                                                 {user.school}
+
                                             </p>
                                         </div>
 
@@ -291,6 +270,7 @@ export default function Navbar() {
                                 ) : (
                                     <div className="card w-full rounded-xl overflow-hidden flex justify-end">
                                         <LoginMenu />
+
                                     </div>
                                 )}
                             </div>

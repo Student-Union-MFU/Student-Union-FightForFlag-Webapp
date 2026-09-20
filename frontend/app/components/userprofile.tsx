@@ -1,4 +1,4 @@
-import { Building2, GraduationCap, Hash, LogOut, Shell } from "lucide-react"
+import { Building2, GraduationCap, Hash, LoaderCircle, LogOut, Shell } from "lucide-react"
 import { useAuth } from "../contexts/AuthContext"
 import { useRef, useState } from "react"
 import clsx from "clsx";
@@ -10,14 +10,24 @@ const ICON_BADGE = "size-11 rounded-xl bg-zinc-800 flex items-center justify-cen
 
 export default function UserProfile() {
     const [profileActive, setProfileActive] = useState<boolean>(false);
+    const [buttonLoad, setButtonLoad] = useState<boolean>(false);
     const [mounted, setMounted] = useState<boolean>(false);
     const containerRef = useRef<HTMLDivElement>(null);
-    const user = useAuth().user;
+    const { user, logout } = useAuth();
     const loading = useAuth().loading;
     const handleProfileClick = () => {
         if (!profileActive) setMounted(true);
         setProfileActive((prev) => !prev);
     }
+ 
+    const handleLogout = () => {
+        setButtonLoad(true);
+
+        setTimeout(() => {
+            logout();
+            setButtonLoad(false);
+        }, 1000);
+    };   
 
     useGSAP(() => {
         const cards = gsap.utils.toArray<HTMLElement>(".profile-card", containerRef.current);
@@ -115,9 +125,15 @@ export default function UserProfile() {
                                 </div>
                             </div>
 
-                            <button className={clsx(CARD_STYLE, "profile-card opacity-0 scale-95 w-full h-16 py-0 flex items-center justify-center gap-3 text-lg font-medium text-zinc-400 hover:text-red-400 transition-colors")}>
-                                <LogOut size={22} />
+                            <button
+                                onClick={handleLogout}
+                                className={clsx(CARD_STYLE, "profile-card opacity-0 scale-95 w-full h-16 py-0 flex items-center justify-center gap-3 text-lg font-medium text-zinc-400 hover:text-red-400 transition-colors")}>
+                                    { buttonLoad ?
+                                        <LoaderCircle size={22} className="animate-spin" /> :
+                                        <LogOut size={22} />
+                                    }
                                 Log out
+ 
                             </button>
                         </>
                     ) : (

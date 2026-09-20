@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 interface SchoolVote {
     school_id: number;
     school_name: string;
@@ -50,14 +52,14 @@ function DonutChart({ schools, total }: { schools: SchoolVote[]; total: number }
                   .join(", ");
 
     return (
-        <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-center">
+        <div className="flex flex-col items-center gap-10 sm:flex-row sm:justify-center">
             <div
-                className="relative size-56 shrink-0 rounded-full"
+                className="relative lg:right-25 size-56 shrink-0 rounded-full"
                 style={{
                     background: `conic-gradient(${gradient})`,
                 }}
             >
-                <div className="absolute inset-7 flex flex-col items-center justify-center rounded-full bg-white">
+                <div className="absolute bg-zinc-50 inset-7 flex flex-col items-center justify-center rounded-full ">
                     <span className="text-3xl font-bold">
                         {total}
                     </span>
@@ -111,7 +113,7 @@ export default function AdminPage() {
     const getDashboard = async () => {
         try {
             const response = await fetch(
-                "/api/backend/admin/dashboard",
+                `${backendUrl}/admin/dashboard`,
                 {
                     credentials: "include",
                 }
@@ -141,7 +143,7 @@ export default function AdminPage() {
 
         try {
             const response = await fetch(
-                "/api/backend/admin/voting",
+                `${backendUrl}/admin/voting`,
                 {
                     method: "PATCH",
                     headers: {
@@ -286,6 +288,7 @@ export default function AdminPage() {
                     </div>
 
                     <DonutChart
+
                         schools={dashboard.schools}
                         total={dashboard.total_votes}
                     />

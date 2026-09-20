@@ -5,6 +5,8 @@ import Link from "next/link";
 import Container from "./components/container";
 import VerticalCardMarquee from "./components/marquee";
 
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 interface VotingStatus {
     id: number;
     is_open: boolean;
@@ -48,7 +50,7 @@ export default function Home() {
         const getVotingStatus = async () => {
             try {
                 const response = await fetch(
-                    "/api/backend/voting/status",
+                    `${backendUrl}/voting/status`,
                     {
                         cache: "no-store",
                     }
